@@ -1,6 +1,5 @@
 ﻿using MemoAccount.Views.Pages;
 using MemoAccount.Views.Windows;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Wpf.Ui;
 
@@ -50,7 +49,7 @@ namespace MemoAccount.Services
                 )!;
                 _navigationWindow!.ShowWindow();
 
-                _navigationWindow.Navigate(typeof(Views.Pages.DashboardPage));
+                _navigationWindow.Navigate(typeof(LoginPage));
             }
 
             await Task.CompletedTask;

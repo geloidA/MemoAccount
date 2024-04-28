@@ -8,28 +8,41 @@ namespace MemoAccount.ViewModels.Windows
         [ObservableProperty]
         private string _applicationTitle = "Учет служебных записок";
 
+        [ObservableProperty] private bool _isAuthenticated;
+
         [ObservableProperty]
         private ObservableCollection<object> _menuItems =
         [
-            new NavigationViewItem()
+            new NavigationViewItem
             {
-                Content = "Home",
-                Icon = new SymbolIcon { Symbol = SymbolRegular.Home24 },
-                TargetPageType = typeof(Views.Pages.DashboardPage)
-            },
-
-            new NavigationViewItem()
-            {
-                Content = "Data",
-                Icon = new SymbolIcon { Symbol = SymbolRegular.DataHistogram24 },
+                Content = "Все записки",
+                Icon = new SymbolIcon { Symbol = SymbolRegular.Grid24 },
                 TargetPageType = typeof(Views.Pages.DataPage)
+            },
+            new NavigationViewItem
+            {
+                Content = "Просмотр",
+                Icon = new SymbolIcon { Symbol = SymbolRegular.AppsListDetail24 },
+                TargetPageType = typeof(Views.Pages.DashboardPage)
             }
         ];
 
         [ObservableProperty]
         private ObservableCollection<object> _footerMenuItems =
         [
-            new NavigationViewItem()
+            new NavigationViewItem
+            {
+                Content = "Вход",
+                Icon = new SymbolIcon { Symbol = SymbolRegular.Person24 },
+                TargetPageType = typeof(Views.Pages.LoginPage)
+            },
+            new NavigationViewItem
+            {
+                Content = "Регистрация",
+                Visibility = Visibility.Collapsed,
+                TargetPageType = typeof(Views.Pages.RegistrationPage)
+            },
+            new NavigationViewItem
             {
                 Content = "Settings",
                 Icon = new SymbolIcon { Symbol = SymbolRegular.Settings24 },

@@ -6,10 +6,10 @@ namespace MemoAccount.ViewModels.Pages
 {
     public partial class DataViewModel : ObservableObject, INavigationAware
     {
-        private bool _isInitialized = false;
+        private bool _isInitialized;
 
         [ObservableProperty]
-        private IEnumerable<DataColor> _colors;
+        private IEnumerable<DataColor>? _colors;
 
         public void OnNavigatedTo()
         {
@@ -24,13 +24,13 @@ namespace MemoAccount.ViewModels.Pages
             var random = new Random();
             var colorCollection = new List<DataColor>();
 
-            for (int i = 0; i < 8192; i++)
+            for (var i = 0; i < 8192; i++)
                 colorCollection.Add(
                     new DataColor
                     {
                         Color = new SolidColorBrush(
                             Color.FromArgb(
-                                (byte)200,
+                                200,
                                 (byte)random.Next(0, 250),
                                 (byte)random.Next(0, 250),
                                 (byte)random.Next(0, 250)
