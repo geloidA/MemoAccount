@@ -1,9 +1,11 @@
-﻿using MemoAccount.Views.Pages;
+﻿using MemoAccount.Services.Auth;
+using MemoAccount.Services.Repository;
+using MemoAccount.Views.Pages;
 using Wpf.Ui;
 
 namespace MemoAccount.ViewModels.Pages;
 
-public partial class RegistrationViewModel(INavigationWindow navigationWindow) : ObservableObject
+public partial class RegistrationViewModel(INavigationService navigationService, IAuthService authService) : ObservableObject
 {
     [ObservableProperty] private string? _firstName;
     [ObservableProperty] private string? _lastName;
@@ -12,9 +14,23 @@ public partial class RegistrationViewModel(INavigationWindow navigationWindow) :
     [ObservableProperty] private string? _passwordSuggest;
 
     [RelayCommand]
-    private Task Register()
+    private async Task Register()
     {
-        navigationWindow.Navigate(typeof(LoginPage));
-        return Task.CompletedTask;
+        var result = await authService.Register(new RegistrationDto
+        {
+            FirstName = FirstName,
+            LastName = LastName,
+            Login = Login,
+            Password = Password
+        });
+
+        if (result.Status == ActionStatus.Success)
+        {
+            navigationService.Navigate(typeof(LoginPage));
+        }
+        else
+        {
+            MessageBox.Show(result.ErrorMessage);
+        }
     }
 }

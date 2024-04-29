@@ -5,7 +5,7 @@ namespace MemoAccount.ViewModels.Pages
 {
     public partial class SettingsViewModel : ObservableObject, INavigationAware
     {
-        private bool _isInitialized = false;
+        private bool _isInitialized;
 
         [ObservableProperty]
         private string _appVersion = string.Empty;
@@ -24,15 +24,15 @@ namespace MemoAccount.ViewModels.Pages
         private void InitializeViewModel()
         {
             CurrentTheme = ApplicationThemeManager.GetAppTheme();
-            AppVersion = $"UiDesktopApp1 - {GetAssemblyVersion()}";
+            AppVersion = $"SUPER_BUZOV_APP - {GetAssemblyVersion()}";
 
             _isInitialized = true;
         }
 
-        private string GetAssemblyVersion()
+        private static string GetAssemblyVersion()
         {
             return System.Reflection.Assembly.GetExecutingAssembly().GetName().Version?.ToString()
-                ?? String.Empty;
+                ?? string.Empty;
         }
 
         [RelayCommand]

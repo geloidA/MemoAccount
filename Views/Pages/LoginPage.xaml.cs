@@ -7,9 +7,9 @@ public partial class LoginPage : INavigableView<LoginViewModel>
 {
     public LoginViewModel ViewModel { get; }
 
-    public LoginPage(LoginViewModel view)
+    public LoginPage(LoginViewModel model)
     {
-        ViewModel = view;
+        ViewModel = model;
         DataContext = this;
 
         InitializeComponent();

@@ -1,10 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using MemoAccount.Models;
+using MemoAccount.Services.Auth;
+using MemoAccount.Services.Repository;
 using MemoAccount.Views.Pages;
 using Wpf.Ui;
 
 namespace MemoAccount.ViewModels.Pages;
 
-public partial class LoginViewModel(INavigationWindow navigationWindow) : ObservableValidator
+public partial class LoginViewModel(INavigationService navigationService, IAuthService authService) : ObservableValidator
 {
     private string? _login;
 
@@ -25,16 +28,13 @@ public partial class LoginViewModel(INavigationWindow navigationWindow) : Observ
     }
 
     [RelayCommand]
-    private Task LoginAsync()
-    {
-        return Task.CompletedTask;
-    }
+    private Task<ActionResult<User>> LoginAsync() => authService.Login(new LoginDto { Login = Login, Password = Password });
 
     private bool CanLogin() => !string.IsNullOrEmpty(_login) && !string.IsNullOrWhiteSpace(_password);
 
     [RelayCommand]
     private void OpenRegisterPage()
     {
-        navigationWindow.Navigate(typeof(RegistrationPage));
+        navigationService.Navigate(typeof(RegistrationPage));
     }
 }

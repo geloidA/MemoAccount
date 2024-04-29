@@ -2,5 +2,6 @@
 
 public enum MemoStatus
 {
-    
+    Open,
+    Closed
 }

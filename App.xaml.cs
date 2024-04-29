@@ -46,14 +46,16 @@ namespace MemoAccount
                 services.AddSingleton<INavigationWindow, MainWindow>();
                 services.AddSingleton<MainWindowViewModel>();
 
-                services.AddAuthentication();
+                services.AddAuthentication()
+                    .AddDomainRepositories();
 
-                services.AddSingleton<DashboardPage>();
-                services.AddSingleton<DashboardViewModel>();
-                services.AddSingleton<DataPage>();
-                services.AddSingleton<DataViewModel>();
+                // Adds assembly's mappers located in Services/Mappers folder
+                services.AddAutoMapper(x => x.AddMaps(Assembly.GetExecutingAssembly()));
+
                 services.AddSingleton<SettingsPage>();
                 services.AddSingleton<SettingsViewModel>();
+                services.AddSingleton<MemoPage>();
+                services.AddSingleton<MemoViewModel>();
             }).Build();
 
         /// <summary>

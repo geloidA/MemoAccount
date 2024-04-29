@@ -1,5 +1,9 @@
 ﻿namespace MemoAccount.Models;
 
-class Department
+/// <summary>
+/// Model for <see cref="Services.Data.Dtos.DepartmentDto"/>
+/// </summary>
+public class Department : EntityBase<int>
 {
+    public string Name { get; set; } = null!;
 }

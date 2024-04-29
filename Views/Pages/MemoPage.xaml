@@ -1,0 +1,37 @@
+﻿<Page
+    x:Class="MemoAccount.Views.Pages.MemoPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:cntrls="clr-namespace:MemoAccount.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:domain="clr-namespace:MemoAccount.Models"
+    xmlns:local="clr-namespace:MemoAccount.Views.Pages"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    Title="MemoPage"
+    d:DataContext="{d:DesignInstance local:MemoPage}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
+    ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+    mc:Ignorable="d">
+    <Page.Resources>
+        <DataTemplate x:Key="MemoCardTemplate" DataType="{x:Type domain:Memo}">
+            <cntrls:MemoCard Memo="{Binding}" />
+        </DataTemplate>
+    </Page.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.1*" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <StackPanel />
+        <ui:ListView
+            Grid.Row="1"
+            ItemTemplate="{StaticResource MemoCardTemplate}"
+            ItemsSource="{Binding ViewModel.Memos}" />
+    </Grid>
+</Page>
