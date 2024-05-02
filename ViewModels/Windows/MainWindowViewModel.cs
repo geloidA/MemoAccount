@@ -18,12 +18,6 @@ namespace MemoAccount.ViewModels.Windows
                 Icon = new SymbolIcon { Symbol = SymbolRegular.Person16 },
                 TargetPageType = typeof(LoginPage),
                 ToolTip = "Вход в систему"
-            },
-            new NavigationViewItem
-            {
-                Content = "Регистрация",
-                Visibility = Visibility.Collapsed,
-                TargetPageType = typeof(RegistrationPage)
             }
         ];
 
@@ -39,7 +33,10 @@ namespace MemoAccount.ViewModels.Windows
 
         #endregion
 
-        public MainWindowViewModel(IAuthenticationStateProvider stateProvider, IAuthService authService, INavigationService navigationService)
+        public MainWindowViewModel(
+            IAuthenticationStateProvider stateProvider, 
+            IAuthService authService, 
+            INavigationService navigationService)
         {
             _footerMenuItems = _unauthorizedFooterItems;
             _menuItems = [];
@@ -48,9 +45,9 @@ namespace MemoAccount.ViewModels.Windows
             {
                 new NavigationViewItem
                 {
+                    Content = "Настройки",
                     Icon = new SymbolIcon { Symbol = SymbolRegular.Settings16 },
-                    TargetPageType = typeof(SettingsPage),
-                    ToolTip = "Настройки приложения"
+                    TargetPageType = typeof(SettingsPage)
                 },
                 new NavigationViewItem
                 {

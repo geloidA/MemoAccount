@@ -9,6 +9,7 @@ using Microsoft.Extensions.Hosting;
 using System.IO;
 using System.Reflection;
 using System.Windows.Threading;
+using MemoAccount.Services.Mappers;
 using Wpf.Ui;
 
 namespace MemoAccount
@@ -40,7 +41,8 @@ namespace MemoAccount
                 services.AddSingleton<ITaskBarService, TaskBarService>();
 
                 // Service containing navigation, same as INavigationWindow... but without window
-                services.AddSingleton<INavigationService, NavigationService>();
+                services.AddSingleton<INavigationService, NavigationService>()
+                    .AddSingleton<IContentDialogService, ContentDialogService>();
 
                 // Main window with navigation
                 services.AddSingleton<INavigationWindow, MainWindow>();
@@ -50,12 +52,14 @@ namespace MemoAccount
                     .AddDomainRepositories();
 
                 // Adds assembly's mappers located in Services/Mappers folder
-                services.AddAutoMapper(x => x.AddMaps(Assembly.GetExecutingAssembly()));
+                services.AddAutoMapper(x => x.AddProfile(typeof(MainProfile)));
 
                 services.AddSingleton<SettingsPage>();
                 services.AddSingleton<SettingsViewModel>();
-                services.AddSingleton<MemoPage>();
-                services.AddSingleton<MemoViewModel>();
+                services.AddTransient<MemoPage>();
+                services.AddTransient<MemoViewModel>();
+                services.AddTransient<AddEditMemoPage>();
+                services.AddTransient<AddEditMemoViewMode>();
             }).Build();
 
         /// <summary>

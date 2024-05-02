@@ -1,0 +1,85 @@
+﻿<Page
+    x:Class="MemoAccount.Views.Pages.AddEditMemoPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:domain="clr-namespace:MemoAccount.Models"
+    xmlns:helpers="clr-namespace:MemoAccount.Helpers"
+    xmlns:local="clr-namespace:MemoAccount.Views.Pages"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    d:DataContext="{d:DesignInstance local:AddEditMemoPage}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
+    ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <ui:SymbolIcon x:Key="LeftArrow" Symbol="ArrowLeft12" />
+        <helpers:ObjectToBoolConverter x:Key="ObjectToBoolConverter" />
+    </Page.Resources>
+
+    <StackPanel
+        Width="500"
+        HorizontalAlignment="Center"
+        VerticalAlignment="Center">
+        <ui:HyperlinkButton Command="{Binding ViewModel.CancelCommand}" Icon="{StaticResource LeftArrow}">
+            <TextBlock FontSize="12">Отмена</TextBlock>
+        </ui:HyperlinkButton>
+        <ui:TextBox Margin="0,10" Text="{Binding ViewModel.Number}" PlaceholderText="Номер" />
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <ui:AutoSuggestBox
+                Margin="0,0,3,0"
+                OriginalItemsSource="{Binding ViewModel.DepartmentNames}"
+                PlaceholderText="Отдел"
+                SuggestionChosen="DepartmentChosen"
+                TextChanged="OnDepartmentSuggestBoxOnTextChanged" />
+            <ui:AutoSuggestBox
+                Grid.Column="1"
+                Margin="3,0,0,0"
+                IsEnabled="{Binding ViewModel.Department, Converter={StaticResource ObjectToBoolConverter}}"
+                OriginalItemsSource="{Binding ViewModel.DivisionsNames}"
+                PlaceholderText="Подразделение"
+                SuggestionChosen="DivisionChosen"
+                TextChanged="OnDivisionSuggestBoxOnTextChanged" />
+        </Grid>
+        <ui:TextBox
+            Height="100"
+            Margin="0,10"
+            PlaceholderText="Содержание"
+            Text="{Binding ViewModel.Content}"
+            TextWrapping="Wrap" />
+        <Grid Margin="0,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <ui:TextBox
+                Margin="0,0,3,0"
+                IsReadOnly="True"
+                IsReadOnlyCaretVisible="False"
+                PlaceholderText="Дата создания"
+                Text="{Binding ViewModel.CreationDate, StringFormat={}{0:dd.MM.yyyy}}" />
+            <ui:CalendarDatePicker
+                Grid.Column="1"
+                Height="35"
+                Margin="3,0,0,0"
+                Date="{Binding ViewModel.CreationDate, Mode=TwoWay}" />
+        </Grid>
+        <ui:Button
+            Margin="0,10"
+            Padding="20,5"
+            HorizontalAlignment="Center"
+            Background="MediumPurple"
+            Command="{Binding ViewModel.CreateCommand}"
+            Content="Создать"
+            Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+    </StackPanel>
+</Page>

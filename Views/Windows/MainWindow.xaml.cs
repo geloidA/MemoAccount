@@ -12,7 +12,8 @@ namespace MemoAccount.Views.Windows
         public MainWindow(
             MainWindowViewModel viewModel,
             IPageService pageService,
-            INavigationService navigationService
+            INavigationService navigationService,
+            IContentDialogService contentDialogService
         )
         {
             ViewModel = viewModel;
@@ -22,6 +23,7 @@ namespace MemoAccount.Views.Windows
 
             InitializeComponent();
             SetPageService(pageService);
+            contentDialogService.SetDialogHost(RootContentDialog);
 
             navigationService.SetNavigationControl(RootNavigation);
         }

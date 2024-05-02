@@ -8,7 +8,6 @@ public class MemoDbContext : DbContext
 {
     public DbSet<UserDto> Users { get; set; }
     public DbSet<MemoDto> Memos { get; set; }
-    public DbSet<ApplicantDto> Applicants { get; set; }
     public DbSet<DepartmentDto> Departments { get; set; }
     public DbSet<DivisionDto> Divisions { get; set; }
 

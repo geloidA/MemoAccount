@@ -4,12 +4,11 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:MemoAccount.Views.Windows"
-    xmlns:helpers="clr-namespace:MemoAccount.Helpers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     Title="{Binding ViewModel.ApplicationTitle, Mode=OneWay}"
-    Width="1100"
-    Height="650"
+    Width="1920"
+    Height="1080"
     d:DataContext="{d:DesignInstance local:MainWindow,
                                      IsDesignTimeCreatable=True}"
     d:DesignHeight="450"
@@ -23,10 +22,6 @@
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
 
-    <ui:FluentWindow.Resources>
-        <helpers:BoolToVisibilityConverter x:Key="BoolToVisibility" />
-    </ui:FluentWindow.Resources>
-
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -35,22 +30,17 @@
         <ui:NavigationView
             x:Name="RootNavigation"
             Grid.Row="1"
-            Padding="42,0,42,0"
+            Padding="10"
             BreadcrumbBar="{Binding ElementName=BreadcrumbBar}"
             FooterMenuItemsSource="{Binding ViewModel.FooterMenuItems, Mode=OneWay}"
-            FrameMargin="0"
-            IsBackButtonVisible="Visible"
+            IsBackButtonVisible="Collapsed"
+            IsPaneOpen="False"
             IsPaneToggleVisible="True"
             MenuItemsSource="{Binding ViewModel.MenuItems, Mode=OneWay}"
-            PaneDisplayMode="LeftFluent">
+            PaneDisplayMode="LeftMinimal">
             <ui:NavigationView.Header>
-                <ui:BreadcrumbBar x:Name="BreadcrumbBar" Margin="42,32,42,20" />
+                <ui:BreadcrumbBar x:Name="BreadcrumbBar" Padding="15" />
             </ui:NavigationView.Header>
-            <ui:NavigationView.ContentOverlay>
-                <Grid>
-                    <ui:SnackbarPresenter x:Name="SnackbarPresenter" />
-                </Grid>
-            </ui:NavigationView.ContentOverlay>
         </ui:NavigationView>
 
         <ContentPresenter

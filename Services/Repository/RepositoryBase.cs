@@ -3,8 +3,6 @@
 public abstract class RepositoryBase<T, TKey> : IRepository<T, TKey>
     where T : class
 {
-    public abstract void Dispose();
-
     public abstract IAsyncEnumerable<T> GetItemsAsync();
 
     protected abstract TKey KeySelector(T item);

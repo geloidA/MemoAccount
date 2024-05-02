@@ -5,7 +5,6 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:domain="clr-namespace:MemoAccount.Models"
     xmlns:helpers="clr-namespace:MemoAccount.Helpers"
-    xmlns:local="clr-namespace:MemoAccount.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     d:DataContext="{d:DesignInstance domain:Memo}"
@@ -15,48 +14,92 @@
 
     <UserControl.Resources>
         <helpers:MemoStatusToVisibility x:Key="MemoStatusToVisibility" />
+        <helpers:MemoStatusToVisibilityReverse x:Key="MemoStatusToVisibilityReverse" />
     </UserControl.Resources>
 
-    <ui:Card Padding="10">
-        <ui:Card.ContextMenu>
-            <ContextMenu />
-        </ui:Card.ContextMenu>
-        <Grid MinHeight="80">
+    <ui:Card Padding="10" Background="{DynamicResource ApplicationBackgroundBrush}">
+        <Grid MinHeight="100">
             <Grid.RowDefinitions>
-                <RowDefinition Height="0.2*" />
+                <RowDefinition Height="0.45*" />
                 <RowDefinition />
             </Grid.RowDefinitions>
-            <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
-                <ui:SymbolIcon
-                    Margin="0,0,10,0"
-                    VerticalAlignment="Center"
-                    FontSize="20"
-                    Foreground="Green"
-                    Symbol="CheckmarkCircle12"
-                    ToolTip="{Binding CompletionDate, StringFormat=Выполнено:{0:dd.MM.yyyy}}"
-                    Visibility="{Binding Status, Converter={StaticResource MemoStatusToVisibility}}" />
-                <TextBlock
-                    FontSize="17"
-                    FontWeight="DemiBold"
-                    TextAlignment="Center">
-                    Служебная записка №
+            <Grid Margin="0,0,0,10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                    <ui:SymbolIcon
+                        Margin="0,0,10,0"
+                        VerticalAlignment="Center"
+                        FontSize="20"
+                        Foreground="LightSlateGray"
+                        Symbol="ArrowSync12"
+                        ToolTip="Открыта"
+                        Visibility="{Binding Status, Converter={StaticResource MemoStatusToVisibilityReverse}}" />
+                    <ui:SymbolIcon
+                        Margin="0,0,10,0"
+                        VerticalAlignment="Center"
+                        FontSize="20"
+                        Foreground="Green"
+                        Symbol="CheckmarkCircle12"
+                        ToolTip="Закрыта"
+                        Visibility="{Binding Status, Converter={StaticResource MemoStatusToVisibility}}" />
                     <TextBlock
+                        VerticalAlignment="Center"
                         FontSize="17"
                         FontWeight="DemiBold"
-                        Text="{Binding Number}"
-                        TextAlignment="Center" />
-                </TextBlock>
-            </StackPanel>
-            <TextBlock
-                Grid.Row="0"
-                HorizontalAlignment="Right"
-                Text="{Binding CreatedDate, StringFormat={}{0:dd.MM.yyyy}}" />
+                        TextAlignment="Center">
+                        Служебная записка №
+                        <TextBlock
+                            FontSize="17"
+                            FontWeight="DemiBold"
+                            Text="{Binding Number}"
+                            TextAlignment="Center" />
+                    </TextBlock>
+                </StackPanel>
+
+                <StackPanel
+                    Grid.Column="1"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Orientation="Horizontal">
+                    <ui:Card
+                        Margin="10,0"
+                        Padding="5"
+                        BorderBrush="MediumPurple">
+                        <TextBlock
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            FontSize="12">
+                            <TextBlock Text="{Binding ApplicantString}" />
+                        </TextBlock>
+                    </ui:Card>
+                    <TextBlock VerticalAlignment="Center" Text="{Binding CreatedDate, StringFormat=c: {0:dd.MM.yyyy}}" />
+                </StackPanel>
+            </Grid>
+
             <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <TextBlock FontSize="15" Text="{Binding Content}" />
+                <TextBlock
+                    FontSize="15"
+                    Text="{Binding Content}"
+                    TextTrimming="CharacterEllipsis"
+                    TextWrapping="Wrap" />
+                <ui:Card
+                    Grid.Column="1"
+                    Padding="3"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Bottom"
+                    Background="SpringGreen"
+                    Foreground="Black"
+                    Visibility="{Binding Status, Converter={StaticResource MemoStatusToVisibility}}">
+                    <TextBlock Text="{Binding CompletionDate, StringFormat=Выполнено: {0:dd.MM.yyyy}}" />
+                </ui:Card>
             </Grid>
         </Grid>
     </ui:Card>

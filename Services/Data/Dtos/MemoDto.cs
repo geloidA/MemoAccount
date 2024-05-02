@@ -14,6 +14,9 @@ public class MemoDto
     public DateTime? CompletionDate { get; set; }
     [MaxLength(int.MaxValue)] public string? ItemsWithdrawn { get; set; }
 
-    [ForeignKey("ApplicantId")] public int ApplicantId { get; set; }
-    public virtual required ApplicantDto Applicant { get; set; }
+    [ForeignKey("DepartmentId")] public int DepartmentId { get; set; }
+    public virtual required DepartmentDto Department { get; set; }
+
+    [ForeignKey("DivisionId")] public int? DivisionId { get; set; }
+    public virtual DivisionDto? Division { get; set; }
 }

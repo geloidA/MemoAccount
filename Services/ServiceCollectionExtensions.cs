@@ -20,10 +20,9 @@ internal static class ServiceCollectionExtensions
     public static IServiceCollection AddDomainRepositories(this IServiceCollection services)
     {
         return services
-            .AddScoped<IRepository<Memo, int>, MemoRepository>()
-            .AddScoped<IRepository<Applicant, int>, ApplicantRepository>()
-            .AddScoped<IRepository<Department, int>, DepartmentRepository>()
-            .AddScoped<IRepository<Division, int>, DivisionRepository>();
+            .AddTransient<IRepository<Memo, int>, MemoRepository>()
+            .AddTransient<IRepository<Department, int>, DepartmentRepository>()
+            .AddTransient<IRepository<Division, int>, DivisionRepository>();
     }
 
     private static IServiceCollection AddAuthViews(this IServiceCollection services)

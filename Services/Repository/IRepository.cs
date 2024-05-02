@@ -1,6 +1,6 @@
 ﻿namespace MemoAccount.Services.Repository;
 
-public interface IRepository<T, in TKey> : IDisposable
+public interface IRepository<T, in TKey>
     where T : class
 {
     IAsyncEnumerable<T> GetItemsAsync();

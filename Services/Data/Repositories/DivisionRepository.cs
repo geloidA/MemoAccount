@@ -8,14 +8,27 @@ namespace MemoAccount.Services.Data.Repositories;
 
 public class DivisionRepository(IMapper mapper) : DomainRepository<Division, DivisionDto, int>(mapper)
 {
-    public override IAsyncEnumerable<Division> GetItemsAsync() => DbContext.Divisions
-        .Include(d => d.Department)
-        .AsAsyncEnumerable()
-        .Select(Mapper.Map<Division>);
+    public override async IAsyncEnumerable<Division> GetItemsAsync()
+    {
+        var dbContext = new MemoDbContext();
+
+        await foreach(var division in dbContext.Divisions
+                          .Include(d => d.Department)
+                          .AsAsyncEnumerable()
+                          .Select(Mapper.Map<Division>))
+        {
+            yield return division;
+        }
+
+        await dbContext.DisposeAsync();
+    }
 
     public override async Task<ActionResult<Division>> CreateAsync(Division item)
     {
-        var created = await DbContext.Divisions.AddAsync(Mapper.Map<DivisionDto>(item));
+        var dbContext = new MemoDbContext();
+        var created = await dbContext.Divisions.AddAsync(Mapper.Map<DivisionDto>(item));
+        await dbContext.SaveChangesAsync();
+        await dbContext.DisposeAsync();
         return Success(Mapper.Map<Division>(created.Entity));
     }
 

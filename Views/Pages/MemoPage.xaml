@@ -5,6 +5,7 @@
     xmlns:cntrls="clr-namespace:MemoAccount.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:domain="clr-namespace:MemoAccount.Models"
+    xmlns:helpers="clr-namespace:MemoAccount.Helpers"
     xmlns:local="clr-namespace:MemoAccount.Views.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
@@ -18,8 +19,14 @@
     mc:Ignorable="d">
     <Page.Resources>
         <DataTemplate x:Key="MemoCardTemplate" DataType="{x:Type domain:Memo}">
-            <cntrls:MemoCard Memo="{Binding}" />
+            <cntrls:MemoCard
+                MaxWidth="2500"
+                MaxHeight="200"
+                Memo="{Binding}" />
         </DataTemplate>
+        <ui:SymbolIcon x:Key="SearchIcon" Symbol="Search48" />
+        <ui:SymbolIcon x:Key="AddIcon" Symbol="Add12" />
+        <helpers:MemoToStatusChangeString x:Key="ToStatusChangeString" />
     </Page.Resources>
 
     <Grid>
@@ -28,10 +35,64 @@
             <RowDefinition />
         </Grid.RowDefinitions>
 
-        <StackPanel />
-        <ui:ListView
-            Grid.Row="1"
-            ItemTemplate="{StaticResource MemoCardTemplate}"
-            ItemsSource="{Binding ViewModel.Memos}" />
+        <Grid Margin="0,5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <ui:TextBox
+                VerticalAlignment="Center"
+                Icon="{StaticResource SearchIcon}"
+                IconPlacement="Left"
+                PlaceholderText="Поиск (по номеру и содержанию)"
+                Text="{Binding ViewModel.SearchText, UpdateSourceTrigger=PropertyChanged}" />
+            <StackPanel
+                Grid.Column="1"
+                HorizontalAlignment="Right"
+                Orientation="Horizontal">
+                <CheckBox
+                    Margin="0,0,10,0"
+                    VerticalAlignment="Center"
+                    Command="{Binding ViewModel.OnlyClosedToggledCommand}"
+                    IsChecked="{Binding ViewModel.OnlyClosed}">
+                    <TextBlock FontSize="17" Text="Только закрытые" />
+                    <CheckBox.LayoutTransform>
+                        <ScaleTransform ScaleX="0.75" ScaleY="0.75" />
+                    </CheckBox.LayoutTransform>
+                </CheckBox>
+                <CheckBox
+                    Margin="0,0,10,0"
+                    VerticalAlignment="Center"
+                    Command="{Binding ViewModel.OnlyOpenedToggledCommand}"
+                    IsChecked="{Binding ViewModel.OnlyOpened}">
+                    <TextBlock FontSize="17" Text="Только открытые" />
+                    <CheckBox.LayoutTransform>
+                        <ScaleTransform ScaleX="0.75" ScaleY="0.75" />
+                    </CheckBox.LayoutTransform>
+                </CheckBox>
+                <ui:Button
+                    Padding="4"
+                    Command="{Binding ViewModel.ShowCreationMemoPageCommand}"
+                    FontSize="17"
+                    Foreground="Green"
+                    Icon="{StaticResource AddIcon}"
+                    ToolTip="Создать записку" />
+            </StackPanel>
+        </Grid>
+        <ui:DynamicScrollViewer Grid.Row="1">
+            <ui:ListView
+                Padding="0,10"
+                ItemTemplate="{StaticResource MemoCardTemplate}"
+                ItemsSource="{Binding ViewModel.Memos}"
+                SelectedItem="{Binding ViewModel.SelectedMemo}">
+                <ListView.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Command="{Binding ViewModel.ShowCompletionDialogCommand}" Header="{Binding ViewModel.SelectedMemo, Converter={StaticResource ToStatusChangeString}}" />
+                        <MenuItem Header="Изменить" />
+                        <MenuItem Header="Удалить" />
+                    </ContextMenu>
+                </ListView.ContextMenu>
+            </ui:ListView>
+        </ui:DynamicScrollViewer>
     </Grid>
 </Page>

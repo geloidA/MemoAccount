@@ -6,45 +6,46 @@ namespace MemoAccount.Services.Repository;
 public abstract class DomainRepository<T, TDto, TKey>: RepositoryBase<T, TKey>
     where T : class
 {
-    protected readonly MemoDbContext DbContext;
     protected readonly IMapper Mapper;
 
     protected DomainRepository(IMapper mapper)
     {
-        DbContext = new MemoDbContext();
+        var dbContext = new MemoDbContext();
         Mapper = mapper;
 
-        DbContext.Database.EnsureCreated();
+        dbContext.Database.EnsureCreated();
+        dbContext.Dispose();
     }
-
-    public override void Dispose() => DbContext.Dispose();
 
     public override async Task<ActionResult<T>> DeleteAsync(T item)
     {
-        var foundedObj = await DbContext.FindAsync(typeof(TDto), KeySelector(item));
+        var dbContext = new MemoDbContext();
+        var foundedObj = await dbContext.FindAsync(typeof(TDto), KeySelector(item));
 
         if (foundedObj is not TDto toRemove) return NotFound();
 
-        DbContext.Remove(toRemove);
-        await DbContext.SaveChangesAsync();
+        dbContext.Remove(toRemove);
+        await dbContext.SaveChangesAsync();
+        await dbContext.DisposeAsync();
         return Success(Mapper.Map<T>(toRemove));
     }
 
     public override async Task<ActionResult<T>> UpdateAsync(T item)
     {
-        var foundedObj = await DbContext.FindAsync(typeof(TDto), KeySelector(item));
+        var dbContext = new MemoDbContext();
 
-        if (foundedObj is not TDto) return NotFound();
+        dbContext.Update(Mapper.Map<TDto>(item)!);
 
-        var entity = DbContext.Update(Mapper.Map<TDto>(item)!);
-        await DbContext.SaveChangesAsync();
-
-        return Success(Mapper.Map<T>(entity.Entity));
+        await dbContext.SaveChangesAsync();
+        await dbContext.DisposeAsync();
+        return Success(item);
     }
 
     public override async Task<ActionResult<T>> GetItemAsync(TKey id)
     {
-        var item = await DbContext.FindAsync(typeof(TDto), id);
+        var dbContext = new MemoDbContext();
+        var item = await dbContext.FindAsync(typeof(TDto), id);
+        await dbContext.DisposeAsync();
         return item == null ? NotFound() : Success(Mapper.Map<T>(item));
     }
 }

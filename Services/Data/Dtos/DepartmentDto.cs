@@ -10,5 +10,5 @@ public class DepartmentDto
     [MaxLength(100)] public required string Name { get; set; }
 
     public virtual List<DivisionDto>? Divisions { get; set; }
-    public virtual List<ApplicantDto>? Applicants { get; set; }
+    public virtual List<MemoDto>? Memos { get; set; }
 }
