@@ -13,6 +13,7 @@ public class Memo : EntityBase<int>
     public Department Department { get; set; } = null!;
 
     public Division? Division { get; set; }
+    public User? User { get; set; }
 
     public string Number
     {

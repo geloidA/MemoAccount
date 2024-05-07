@@ -50,7 +50,6 @@
                 HorizontalAlignment="Center"
                 Background="{DynamicResource A}"
                 Command="{Binding ViewModel.LoginCommand, Mode=OneWay}"
-                CommandParameter="{Binding ViewModel.LoginModel}"
                 CornerRadius="10">
                 <ui:TextBlock FontSize="15" FontWeight="DemiBold">Войти</ui:TextBlock>
             </ui:Button>

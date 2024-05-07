@@ -17,6 +17,7 @@
     ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
     mc:Ignorable="d">
+
     <Page.Resources>
         <DataTemplate x:Key="MemoCardTemplate" DataType="{x:Type domain:Memo}">
             <cntrls:MemoCard
@@ -27,6 +28,28 @@
         <ui:SymbolIcon x:Key="SearchIcon" Symbol="Search48" />
         <ui:SymbolIcon x:Key="AddIcon" Symbol="Add12" />
         <helpers:MemoToStatusChangeString x:Key="ToStatusChangeString" />
+        <StackPanel x:Key="DialogContent" DataContext="{Binding ViewModel}">
+            <Label Content="Использованные компоненты со склада:" />
+            <ui:TextBox Height="100" Text="{Binding ItemsWithdrawn, Mode=TwoWay}" />
+        </StackPanel>
+        <Style BasedOn="{StaticResource {x:Type ui:ListView}}" TargetType="ui:ListView">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=Items.Count}" Value="0">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate>
+                                <ui:Card Margin="5" HorizontalAlignment="Center">
+                                    <TextBlock
+                                        FontSize="30"
+                                        FontWeight="DemiBold"
+                                        Text="Список пуст" />
+                                </ui:Card>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
     </Page.Resources>
 
     <Grid>
@@ -87,9 +110,12 @@
                 SelectedItem="{Binding ViewModel.SelectedMemo}">
                 <ListView.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Command="{Binding ViewModel.ShowCompletionDialogCommand}" Header="{Binding ViewModel.SelectedMemo, Converter={StaticResource ToStatusChangeString}}" />
-                        <MenuItem Header="Изменить" />
-                        <MenuItem Header="Удалить" />
+                        <MenuItem
+                            Command="{Binding ViewModel.ShowCompletionDialogCommand}"
+                            CommandParameter="{DynamicResource DialogContent}"
+                            Header="{Binding ViewModel.SelectedMemo, Converter={StaticResource ToStatusChangeString}}" />
+                        <MenuItem Header="Изменить" Command="{Binding ViewModel.EditMemoCommand}" />
+                        <MenuItem Header="Удалить" Command="{Binding ViewModel.DeleteMemoCommand}" />
                     </ContextMenu>
                 </ListView.ContextMenu>
             </ui:ListView>

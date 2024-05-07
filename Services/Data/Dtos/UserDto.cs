@@ -11,5 +11,6 @@ public class UserDto
     [MaxLength(100)] public required string Login { get; set; }
     [MaxLength(100)] public required string FirstName { get; set; }
     [MaxLength(100)] public required string LastName { get; set;}
-    public int Type { get; set; }
+
+    public virtual List<MemoDto>? Memos { get; set; }
 }

@@ -14,6 +14,7 @@ public class MemoRepository(IMapper mapper) : DomainRepository<Memo, MemoDto, in
         await foreach (var memo in dbContext.Memos
                            .Include(m => m.Division)
                            .Include(m => m.Department)
+                           .Include(m => m.User)
                            .OrderByDescending(m => m.CreatedDate)
                            .AsAsyncEnumerable()
                            .Select(Mapper.Map<Memo>))
@@ -29,10 +30,28 @@ public class MemoRepository(IMapper mapper) : DomainRepository<Memo, MemoDto, in
 
         if (sameId != null) return Error("Служебная записка с указанным номером уже существует.");
 
-        var created = await dbContext.Memos.AddAsync(Mapper.Map<MemoDto>(item));
+        var add = Mapper.Map<MemoDto>(item);
+
+        add.Department = null!;
+        add.Division = null;
+
+        var created = await dbContext.Memos.AddAsync(add);
         await dbContext.SaveChangesAsync();
         await dbContext.DisposeAsync();
         return Success(Mapper.Map<Memo>(created.Entity));
+    }
+
+    public override async Task<ActionResult<Memo>> UpdateAsync(Memo item)
+    {
+        var dbContext = new MemoDbContext();
+
+        var updated = Mapper.Map<MemoDto>(item);
+        updated.Department = null!;
+        updated.Division = null;
+        dbContext.Update(updated);
+        await dbContext.SaveChangesAsync();
+        await dbContext.DisposeAsync();
+        return Success(item);
     }
 
     protected override int KeySelector(Memo item) => item.Id;

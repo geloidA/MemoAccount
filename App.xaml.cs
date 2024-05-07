@@ -56,6 +56,8 @@ namespace MemoAccount
 
                 services.AddSingleton<SettingsPage>();
                 services.AddSingleton<SettingsViewModel>();
+                services.AddTransient<ReportViewModel>();
+                services.AddTransient<ReportPage>();
                 services.AddTransient<MemoPage>();
                 services.AddTransient<MemoViewModel>();
                 services.AddTransient<AddEditMemoPage>();

@@ -1,0 +1,103 @@
+﻿<Page
+    x:Class="MemoAccount.Views.Pages.ReportPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:domain="clr-namespace:MemoAccount.Models"
+    xmlns:local="clr-namespace:MemoAccount.Views.Pages"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    Title="ReportPage"
+    d:DataContext="{d:DesignInstance local:ReportPage}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
+    ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <ui:SymbolIcon x:Key="Calendar1" Symbol="CalendarMonth24" />
+        <ui:SymbolIcon x:Key="Calendar2" Symbol="CalendarMonth28" />
+        <ui:SymbolIcon x:Key="Cancel" Symbol="Backspace24" />
+    </Page.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <ui:TextBlock
+            Grid.Row="0"
+            Width="600"
+            Margin="0,0,0,20"
+            HorizontalAlignment="Left"
+            FontSize="15"
+            TextWrapping="Wrap">
+            Следующий отчет содержит данные о списке служебных записок. Выберите интервал времени и нажмите кнопку «Создать отчет». Отчет будет создан в
+            <ui:TextBlock FontStyle="Italic">"Загрузках"</ui:TextBlock>
+        </ui:TextBlock>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal">
+            <StackPanel>
+                <Label Content="Начало:" />
+                <StackPanel Orientation="Horizontal">
+                    <ui:TextBox
+                        Width="150"
+                        IsReadOnly="True"
+                        PlaceholderText="Дата начала"
+                        Text="{Binding ViewModel.Start, StringFormat={}{0:dd.MM.yyyy}}" />
+                    <ui:CalendarDatePicker
+                        Height="35"
+                        Margin="3,0,0,0"
+                        Date="{Binding ViewModel.Start, Mode=TwoWay}"
+                        Icon="{StaticResource Calendar1}" />
+                </StackPanel>
+            </StackPanel>
+            <StackPanel Margin="10,0,0,0">
+                <Label Content="Конец:" />
+                <StackPanel Orientation="Horizontal">
+                    <ui:TextBox
+                        Width="150"
+                        IsReadOnly="True"
+                        PlaceholderText="Дата конца"
+                        Text="{Binding ViewModel.End, StringFormat={}{0:dd.MM.yyyy}}" />
+                    <ui:CalendarDatePicker
+                        Height="35"
+                        Margin="3,0,0,0"
+                        Date="{Binding ViewModel.End, Mode=TwoWay}"
+                        Icon="{StaticResource Calendar2}" />
+                </StackPanel>
+            </StackPanel>
+            <StackPanel Margin="10,0,0,0">
+                <Label Content="Пользователь:" />
+                <StackPanel Orientation="Horizontal">
+                    <ComboBox
+                        Width="150"
+                        IsReadOnly="True"
+                        ItemsSource="{Binding ViewModel.Users}"
+                        SelectedItem="{Binding ViewModel.User}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate DataType="{x:Type domain:User}">
+                                <ui:TextBlock Text="{Binding DisplayName}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                    <ui:Button
+                        Height="35"
+                        Margin="3,0,0,0"
+                        Command="{Binding ViewModel.ClearUserCommand}"
+                        Icon="{StaticResource Cancel}" />
+                </StackPanel>
+            </StackPanel>
+        </StackPanel>
+
+        <ui:Button
+            Grid.Row="2"
+            Margin="0,20,0,0"
+            Command="{Binding ViewModel.GenerateReportCommand}"
+            Content="Создать отчет" />
+    </Grid>
+</Page>

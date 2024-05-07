@@ -1,5 +1,9 @@
-﻿using AutoMapper;
+﻿using System.IO;
+using AutoMapper;
+using MemoAccount.Models;
 using MemoAccount.Services.Data;
+using MemoAccount.Services.Data.Dtos;
+using Newtonsoft.Json;
 
 namespace MemoAccount.Services.Repository;
 
@@ -10,11 +14,32 @@ public abstract class DomainRepository<T, TDto, TKey>: RepositoryBase<T, TKey>
 
     protected DomainRepository(IMapper mapper)
     {
-        var dbContext = new MemoDbContext();
         Mapper = mapper;
+        InitializeDatabase();
+    }
 
-        dbContext.Database.EnsureCreated();
-        dbContext.Dispose();
+    private void InitializeDatabase()
+    {
+        using var dbContext = new MemoDbContext();
+        // Проверяем, создана ли база данных
+        if (!dbContext.Database.EnsureCreated())
+        {
+            return; // База данных уже существует, не нужно ничего загружать
+        }
+
+        // Десериализуем JSON в объекты
+        var data = JsonConvert.DeserializeObject<DatabaseData>(File.ReadAllText("default-db-data.json"));
+
+        // Добавляем отделы и подразделения
+        dbContext.Divisions!.AddRange(data!.Departments!.SelectMany(x => x.Divisions!));
+        dbContext.Departments.AddRange(data!.Departments!);
+
+        dbContext.SaveChanges();
+
+        // Добавляем записки
+        dbContext.Memos.AddRange(data.Memos!);
+
+        dbContext.SaveChanges();
     }
 
     public override async Task<ActionResult<T>> DeleteAsync(T item)
@@ -48,4 +73,10 @@ public abstract class DomainRepository<T, TDto, TKey>: RepositoryBase<T, TKey>
         await dbContext.DisposeAsync();
         return item == null ? NotFound() : Success(Mapper.Map<T>(item));
     }
+}
+
+public class DatabaseData
+{
+    public List<DepartmentDto>? Departments { get; set; }
+    public List<MemoDto>? Memos { get; set; }
 }

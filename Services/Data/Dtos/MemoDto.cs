@@ -19,4 +19,7 @@ public class MemoDto
 
     [ForeignKey("DivisionId")] public int? DivisionId { get; set; }
     public virtual DivisionDto? Division { get; set; }
+
+    [ForeignKey("UserId")] public int? UserId { get; set; }
+    public virtual UserDto? User { get; set; }
 }

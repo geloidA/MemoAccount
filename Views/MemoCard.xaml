@@ -14,6 +14,7 @@
 
     <UserControl.Resources>
         <helpers:MemoStatusToVisibility x:Key="MemoStatusToVisibility" />
+        <helpers:EmptyToPlaceholder x:Key="EmptyToPlaceholder" />
         <helpers:MemoStatusToVisibilityReverse x:Key="MemoStatusToVisibilityReverse" />
     </UserControl.Resources>
 
@@ -90,6 +91,15 @@
                     Text="{Binding Content}"
                     TextTrimming="CharacterEllipsis"
                     TextWrapping="Wrap" />
+                <StackPanel Grid.Column="1">
+                    <Label Content="Изъятые со склада комплектующие:" />
+                    <TextBlock
+                        MaxWidth="650"
+                        HorizontalAlignment="Left"
+                        Text="{Binding ItemsWithdrawn, Converter={StaticResource EmptyToPlaceholder}, ConverterParameter=Нет}"
+                        TextTrimming="CharacterEllipsis"
+                        TextWrapping="Wrap" />
+                </StackPanel>
                 <ui:Card
                     Grid.Column="1"
                     Padding="3"
@@ -98,7 +108,10 @@
                     Background="SpringGreen"
                     Foreground="Black"
                     Visibility="{Binding Status, Converter={StaticResource MemoStatusToVisibility}}">
-                    <TextBlock Text="{Binding CompletionDate, StringFormat=Выполнено: {0:dd.MM.yyyy}}" />
+                    <TextBlock>
+                        <TextBlock Text="{Binding User.DisplayName}" />
+                        <TextBlock Text="{Binding CompletionDate, StringFormat=Выполнено: {0:dd.MM.yyyy}}" />
+                    </TextBlock>
                 </ui:Card>
             </Grid>
         </Grid>

@@ -9,7 +9,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     d:DataContext="{d:DesignInstance local:AddEditMemoPage}"
-    d:DesignHeight="450"
+    d:DesignHeight="500"
     d:DesignWidth="800"
     ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
     ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
@@ -18,6 +18,7 @@
 
     <Page.Resources>
         <ui:SymbolIcon x:Key="LeftArrow" Symbol="ArrowLeft12" />
+        <helpers:AddEditBtnTextConverter x:Key="AddEditBtnTextConverter" />
         <helpers:ObjectToBoolConverter x:Key="ObjectToBoolConverter" />
     </Page.Resources>
 
@@ -28,33 +29,57 @@
         <ui:HyperlinkButton Command="{Binding ViewModel.CancelCommand}" Icon="{StaticResource LeftArrow}">
             <TextBlock FontSize="12">Отмена</TextBlock>
         </ui:HyperlinkButton>
-        <ui:TextBox Margin="0,10" Text="{Binding ViewModel.Number}" PlaceholderText="Номер" />
+        <ui:TextBox
+            Margin="0,10"
+            IsReadOnly="{Binding ViewModel.IsEditMode}"
+            PlaceholderText="Номер"
+            Text="{Binding ViewModel.Number}" />
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
 
-            <ui:AutoSuggestBox
-                Margin="0,0,3,0"
-                OriginalItemsSource="{Binding ViewModel.DepartmentNames}"
-                PlaceholderText="Отдел"
-                SuggestionChosen="DepartmentChosen"
-                TextChanged="OnDepartmentSuggestBoxOnTextChanged" />
-            <ui:AutoSuggestBox
-                Grid.Column="1"
-                Margin="3,0,0,0"
-                IsEnabled="{Binding ViewModel.Department, Converter={StaticResource ObjectToBoolConverter}}"
-                OriginalItemsSource="{Binding ViewModel.DivisionsNames}"
-                PlaceholderText="Подразделение"
-                SuggestionChosen="DivisionChosen"
-                TextChanged="OnDivisionSuggestBoxOnTextChanged" />
+            <StackPanel>
+                <Label>Отдел</Label>
+                <ComboBox
+                    Margin="0,0,3,0"
+                    ItemsSource="{Binding ViewModel.Departments}"
+                    SelectedItem="{Binding ViewModel.Department}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate DataType="{x:Type domain:Department}">
+                            <ui:TextBlock Text="{Binding Name}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </StackPanel>
+
+            <StackPanel Grid.Column="1">
+                <Label>Подразделение</Label>
+                <ComboBox
+                    Margin="3,0,0,0"
+                    IsEnabled="{Binding ViewModel.Department, Converter={StaticResource ObjectToBoolConverter}}"
+                    ItemsSource="{Binding ViewModel.Divisions}"
+                    SelectedItem="{Binding ViewModel.Division}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate DataType="{x:Type domain:Division}">
+                            <ui:TextBlock Text="{Binding Name}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </StackPanel>
         </Grid>
         <ui:TextBox
             Height="100"
             Margin="0,10"
             PlaceholderText="Содержание"
             Text="{Binding ViewModel.Content}"
+            TextWrapping="Wrap" />
+        <Label Content="Изъятые со склада комплектующие" />
+        <ui:TextBox
+            Height="100"
+            Margin="0,10"
+            Text="{Binding ViewModel.ItemsWithdrawn}"
             TextWrapping="Wrap" />
         <Grid Margin="0,10">
             <Grid.ColumnDefinitions>
@@ -78,8 +103,8 @@
             Padding="20,5"
             HorizontalAlignment="Center"
             Background="MediumPurple"
-            Command="{Binding ViewModel.CreateCommand}"
-            Content="Создать"
+            Command="{Binding ViewModel.ActionButtonCommand}"
+            Content="{Binding ViewModel.IsEditMode, Converter={StaticResource AddEditBtnTextConverter}}"
             Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
     </StackPanel>
 </Page>

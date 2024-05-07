@@ -25,9 +25,17 @@ namespace MemoAccount.ViewModels.Windows
         [
             new NavigationViewItem
             {
-                Content = "Заявки",
-                Icon = new SymbolIcon { Symbol = SymbolRegular.BuildingRetailShield20 },
+                Content = "Служебные записки",
+                ToolTip = "Служебные записки",
+                Icon = new SymbolIcon { Symbol = SymbolRegular.AlignSpaceEvenlyVertical20 },
                 TargetPageType = typeof(MemoPage)
+            },
+            new NavigationViewItem
+            {
+                Content = "Отчет",
+                ToolTip = "Отчет",
+                Icon = new SymbolIcon { Symbol = SymbolRegular.DocumentTable16 },
+                TargetPageType = typeof(ReportPage)
             }
         ];
 
@@ -47,11 +55,13 @@ namespace MemoAccount.ViewModels.Windows
                 {
                     Content = "Настройки",
                     Icon = new SymbolIcon { Symbol = SymbolRegular.Settings16 },
-                    TargetPageType = typeof(SettingsPage)
+                    TargetPageType = typeof(SettingsPage),
+                    ToolTip = "Настройки"
                 },
                 new NavigationViewItem
                 {
                     Content = "Выход",
+                    ToolTip = "Выход из системы",   
                     Icon = new SymbolIcon { Symbol = SymbolRegular.DoorArrowRight16 },
                     Command = new RelayCommand(() =>
                     {

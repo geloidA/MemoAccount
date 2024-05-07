@@ -1,0 +1,120 @@
+{
+  "departments": [
+    {
+      "Name": "НИО-100",
+      "Divisions": [
+        {
+          "Name": "НТО-110"
+        },
+        {
+          "Name": "НТО-120"
+        },
+        {
+          "Name": "НТО-130"
+        }
+      ]
+    },
+    {
+      "Name": "НИО-200",
+      "Divisions": [
+        {
+          "Name": "НТО-210"
+        },
+        {
+          "Name": "НТО-220"
+        },
+        {
+          "Name": "НТО-230"
+        }
+      ]
+    },
+    {
+      "Name": "НИО-300",
+      "Divisions": [
+        {
+          "Name": "НТО-310"
+        },
+        {
+          "Name": "НТО-320"
+        },
+        {
+          "Name": "НТО-330"
+        }
+      ]
+    },
+    {
+      "Name": "НИО-400",
+      "Divisions": [
+        {
+          "Name": "НТО-410"
+        },
+        {
+          "Name": "НТО-420"
+        },
+        {
+          "Name": "НТО-430"
+        }
+      ]
+    },
+    {
+      "Name": "НИО-500",
+      "Divisions": [
+        {
+          "Name": "НТО-510"
+        },
+        {
+          "Name": "НТО-520"
+        },
+        {
+          "Name": "НТО-530"
+        }
+      ]
+    },
+    {
+      "Name": "НИО-600",
+      "Divisions": [
+        {
+          "Name": "НТО-610"
+        },
+        {
+          "Name": "НТО-620"
+        },
+        {
+          "Name": "НТО-630"
+        }
+      ]
+    }
+  ],
+  "memos": [
+    {
+      "Id":  1,
+      "Status": 0,
+      "Content": "Содержание записки 1",
+      "CreatedDate": "2024-05-04T12:00:00",
+      "CompletionDate": null,
+      "ItemsWithdrawn": "Список изъятых предметов 1",
+      "DepartmentId": 1,
+      "DivisionId": 1
+    },
+    {
+      "Id": 2,
+      "Status": 1,
+      "Content": "Содержание записки 2",
+      "CreatedDate": "2024-05-05T12:00:00",
+      "CompletionDate": "2024-05-05T12:00:00",
+      "ItemsWithdrawn": null,
+      "DepartmentId": 2,
+      "DivisionId": 4
+    },
+    {
+      "Id": 3,
+      "Status": 0,
+      "Content": "Содержание записки 3",
+      "CreatedDate": "2024-05-06T12:00:00",
+      "CompletionDate": null,
+      "ItemsWithdrawn": null,
+      "DepartmentId": 3,
+      "DivisionId": 7
+    }
+  ]
+}
