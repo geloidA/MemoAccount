@@ -1,7 +1,7 @@
 # MemoAccount
 
 
-<p align="left">
+<p align="center">
   <img src="presentation-images/main-page-dark.png" alt="Скриншот приложения в темном режиме" width="700">
 </p>
 
