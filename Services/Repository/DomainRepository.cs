@@ -1,9 +1,9 @@
 ﻿using System.IO;
 using AutoMapper;
-using MemoAccount.Models;
 using MemoAccount.Services.Data;
 using MemoAccount.Services.Data.Dtos;
 using Newtonsoft.Json;
+using Serilog;
 
 namespace MemoAccount.Services.Repository;
 
@@ -21,9 +21,11 @@ public abstract class DomainRepository<T, TDto, TKey>: RepositoryBase<T, TKey>
     private void InitializeDatabase()
     {
         using var dbContext = new MemoDbContext();
+        Log.Information("Initializing database...");
         // Проверяем, создана ли база данных
         if (!dbContext.Database.EnsureCreated())
         {
+            Log.Information("Database already exists");
             return; // База данных уже существует, не нужно ничего загружать
         }
 
@@ -38,6 +40,7 @@ public abstract class DomainRepository<T, TDto, TKey>: RepositoryBase<T, TKey>
 
         // Добавляем записки
         dbContext.Memos.AddRange(data.Memos!);
+        Log.Information("Database initialized");
 
         dbContext.SaveChanges();
     }
@@ -45,6 +48,7 @@ public abstract class DomainRepository<T, TDto, TKey>: RepositoryBase<T, TKey>
     public override async Task<ActionResult<T>> DeleteAsync(T item)
     {
         var dbContext = new MemoDbContext();
+        Log.Information($"Removing item from database... {KeySelector(item)} {item}");
         var foundedObj = await dbContext.FindAsync(typeof(TDto), KeySelector(item));
 
         if (foundedObj is not TDto toRemove) return NotFound();
@@ -59,6 +63,8 @@ public abstract class DomainRepository<T, TDto, TKey>: RepositoryBase<T, TKey>
     {
         var dbContext = new MemoDbContext();
 
+        Log.Information($"Updating database item {KeySelector(item)} {item}");
+
         dbContext.Update(Mapper.Map<TDto>(item)!);
 
         await dbContext.SaveChangesAsync();
@@ -69,6 +75,8 @@ public abstract class DomainRepository<T, TDto, TKey>: RepositoryBase<T, TKey>
     public override async Task<ActionResult<T>> GetItemAsync(TKey id)
     {
         var dbContext = new MemoDbContext();
+
+        Log.Information($"Getting database item {id}");
         var item = await dbContext.FindAsync(typeof(TDto), id);
         await dbContext.DisposeAsync();
         return item == null ? NotFound() : Success(Mapper.Map<T>(item));

@@ -6,7 +6,7 @@ using Wpf.Ui;
 namespace MemoAccount.Services
 {
     /// <summary>
-    /// Managed host of the application.
+    /// Управляет запуском приложения
     /// </summary>
     public class ApplicationHostService : IHostedService
     {
@@ -20,25 +20,25 @@ namespace MemoAccount.Services
         }
 
         /// <summary>
-        /// Triggered when the application host is ready to start the service.
+        /// Срабатывает при старте приложения
         /// </summary>
-        /// <param name="cancellationToken">Indicates that the start process has been aborted.</param>
+        /// <param name="cancellationToken">Токен отмены.</param>
         public async Task StartAsync(CancellationToken cancellationToken)
         {
             await HandleActivationAsync();
         }
 
         /// <summary>
-        /// Triggered when the application host is performing a graceful shutdown.
+        /// Срабатывает при остановке приложения
         /// </summary>
-        /// <param name="cancellationToken">Indicates that the shutdown process should no longer be graceful.</param>
+        /// <param name="cancellationToken">Токен отмены.</param>
         public async Task StopAsync(CancellationToken cancellationToken)
         {
             await Task.CompletedTask;
         }
 
         /// <summary>
-        /// Creates main window during activation.
+        /// Создает окно приложения
         /// </summary>
         private async Task HandleActivationAsync()
         {

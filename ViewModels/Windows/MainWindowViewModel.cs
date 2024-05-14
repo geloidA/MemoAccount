@@ -8,36 +8,44 @@ namespace MemoAccount.ViewModels.Windows
 {
     public partial class MainWindowViewModel : ObservableObject
     {
-        #region defaultMenuItems
+        #region комментарии
 
+        /// <summary>
+        /// Элементы меню, доступные только для неавторизованных пользователей
+        /// </summary>
         private readonly ObservableCollection<object> _unauthorizedFooterItems =
-        [
-            new NavigationViewItem
+            new()
             {
-                Content = "Вход",
-                Icon = new SymbolIcon { Symbol = SymbolRegular.Person16 },
-                TargetPageType = typeof(LoginPage),
-                ToolTip = "Вход в систему"
-            }
-        ];
+                new NavigationViewItem
+                {
+                    Content = "Вход",
+                    Icon = new SymbolIcon { Symbol = SymbolRegular.Person16 },
+                    TargetPageType = typeof(LoginPage),
+                    ToolTip = "Вход в систему"
+                }
+            };
 
-        private readonly ObservableCollection<object> _authorizedMenuItems = 
-        [
-            new NavigationViewItem
+        /// <summary>
+        /// Элементы меню, доступные только для авторизованных пользователей
+        /// </summary>
+        private readonly ObservableCollection<object> _authorizedMenuItems =
+            new()
             {
-                Content = "Служебные записки",
-                ToolTip = "Служебные записки",
-                Icon = new SymbolIcon { Symbol = SymbolRegular.AlignSpaceEvenlyVertical20 },
-                TargetPageType = typeof(MemoPage)
-            },
-            new NavigationViewItem
-            {
-                Content = "Отчет",
-                ToolTip = "Отчет",
-                Icon = new SymbolIcon { Symbol = SymbolRegular.DocumentTable16 },
-                TargetPageType = typeof(ReportPage)
-            }
-        ];
+                new NavigationViewItem
+                {
+                    Content = "Служебные записки",
+                    ToolTip = "Служебные записки",
+                    Icon = new SymbolIcon { Symbol = SymbolRegular.AlignSpaceEvenlyVertical20 },
+                    TargetPageType = typeof(MemoPage)
+                },
+                new NavigationViewItem
+                {
+                    Content = "Отчет",
+                    ToolTip = "Отчет",
+                    Icon = new SymbolIcon { Symbol = SymbolRegular.DocumentTable16 },
+                    TargetPageType = typeof(ReportPage)
+                }
+            };
 
         #endregion
 
@@ -76,7 +84,7 @@ namespace MemoAccount.ViewModels.Windows
                 if (stateProvider.AuthorizedUser == null)
                 {
                     FooterMenuItems = _unauthorizedFooterItems;
-                    MenuItems = [];
+                    MenuItems = new ObservableCollection<object>();
                 }
                 else
                 {
@@ -86,14 +94,29 @@ namespace MemoAccount.ViewModels.Windows
             };
         }
 
+        /// <summary>
+        /// Заголовок окна
+        /// </summary>
         [ObservableProperty]
         private string _applicationTitle = "Учет служебных записок";
 
+        /// <summary>
+        /// Меню, доступное для неавторизованных пользователей
+        /// </summary>
         [ObservableProperty] private ObservableCollection<object> _menuItems;
 
+        /// <summary>
+        /// Меню, доступное для авторизованных пользователей
+        /// </summary>
         [ObservableProperty] private ObservableCollection<object> _footerMenuItems;
 
+        /// <summary>
+        /// Элементы контекстного меню в трее
+        /// </summary>
         [ObservableProperty]
-        private ObservableCollection<MenuItem> _trayMenuItems = [new MenuItem { Header = "Home", Tag = "tray_home" }];
+        private ObservableCollection<MenuItem> _trayMenuItems = new()
+        {
+            new MenuItem { Header = "Главная", Tag = "tray_home" }
+        };
     }
 }

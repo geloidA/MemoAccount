@@ -10,95 +10,93 @@ using System.IO;
 using System.Reflection;
 using System.Windows.Threading;
 using MemoAccount.Services.Mappers;
+using Serilog;
 using Wpf.Ui;
 
-namespace MemoAccount
+namespace MemoAccount;
+
+public partial class App
 {
+    // регистрация сервисов приложения
+    private static readonly IHost _host = Host
+        .CreateDefaultBuilder()
+        .ConfigureAppConfiguration(c => { c.SetBasePath(Path.GetDirectoryName(Assembly.GetEntryAssembly()!.Location)); })
+        .ConfigureServices((_, services) =>
+        {
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Information()
+                .WriteTo.File(Path.Combine("logs", "log-.txt"), rollingInterval: RollingInterval.Day)
+                .CreateLogger();
+
+            services.AddHostedService<ApplicationHostService>();
+
+            // Служба, содержащая навигацию
+            services.AddSingleton<IPageService, PageService>();
+
+            // Управление темой приложения
+            services.AddSingleton<IThemeService, ThemeService>();
+
+            // TaskBar manipulation
+            services.AddSingleton<ITaskBarService, TaskBarService>();
+
+            // Служба, содержащая навигацию, аналогично INavigationWindow... но без окна
+            services.AddSingleton<INavigationService, NavigationService>()
+                .AddSingleton<IContentDialogService, ContentDialogService>();
+
+            // Основное окно с навигацией
+            services.AddSingleton<INavigationWindow, MainWindow>();
+            services.AddSingleton<MainWindowViewModel>();
+
+            services.AddAuthentication()
+                .AddDomainRepositories();
+
+            // Добавляет мапперы из папочки Services/Mappers текущей сборки
+            services.AddAutoMapper(x => x.AddProfile(typeof(MainProfile)));
+
+            services.AddSingleton<SettingsPage>();
+            services.AddSingleton<SettingsViewModel>();
+            services.AddTransient<ReportViewModel>();
+            services.AddTransient<ReportPage>();
+            services.AddTransient<MemoPage>();
+            services.AddTransient<MemoViewModel>();
+            services.AddTransient<AddEditMemoPage>();
+            services.AddTransient<AddEditMemoViewMode>();
+        }).Build();
+
     /// <summary>
-    /// Interaction logic for App.xaml
+    /// Возвращает зарегистрированную службу.
     /// </summary>
-    public partial class App
+    /// <typeparam name="T">Тип службы, которую нужно получить.</typeparam>
+    /// <returns>Экземпляр службы или <see langword="null"/>.</returns>
+    public static T GetService<T>()
+        where T : class
     {
-        // The.NET Generic Host provides dependency injection, configuration, logging, and other services.
-        // https://docs.microsoft.com/dotnet/core/extensions/generic-host
-        // https://docs.microsoft.com/dotnet/core/extensions/dependency-injection
-        // https://docs.microsoft.com/dotnet/core/extensions/configuration
-        // https://docs.microsoft.com/dotnet/core/extensions/logging
-        private static readonly IHost _host = Host
-            .CreateDefaultBuilder()
-            .ConfigureAppConfiguration(c => { c.SetBasePath(Path.GetDirectoryName(Assembly.GetEntryAssembly()!.Location)); })
-            .ConfigureServices((_, services) =>
-            {
-                services.AddHostedService<ApplicationHostService>();
+        return _host.Services.GetService(typeof(T)) as T;
+    }
 
-                // Page resolver service
-                services.AddSingleton<IPageService, PageService>();
+    /// <summary>
+    /// Срабатывает при загрузке приложения.
+    /// </summary>
+    private void OnStartup(object sender, StartupEventArgs e)
+    {
+        _host.Start();
+    }
 
-                // Theme manipulation
-                services.AddSingleton<IThemeService, ThemeService>();
+    /// <summary>
+    /// Срабатывает при закрытии приложения.
+    /// </summary>
+    private async void OnExit(object sender, ExitEventArgs e)
+    {
+        await _host.StopAsync();
 
-                // TaskBar manipulation
-                services.AddSingleton<ITaskBarService, TaskBarService>();
+        _host.Dispose();
+    }
 
-                // Service containing navigation, same as INavigationWindow... but without window
-                services.AddSingleton<INavigationService, NavigationService>()
-                    .AddSingleton<IContentDialogService, ContentDialogService>();
-
-                // Main window with navigation
-                services.AddSingleton<INavigationWindow, MainWindow>();
-                services.AddSingleton<MainWindowViewModel>();
-
-                services.AddAuthentication()
-                    .AddDomainRepositories();
-
-                // Adds assembly's mappers located in Services/Mappers folder
-                services.AddAutoMapper(x => x.AddProfile(typeof(MainProfile)));
-
-                services.AddSingleton<SettingsPage>();
-                services.AddSingleton<SettingsViewModel>();
-                services.AddTransient<ReportViewModel>();
-                services.AddTransient<ReportPage>();
-                services.AddTransient<MemoPage>();
-                services.AddTransient<MemoViewModel>();
-                services.AddTransient<AddEditMemoPage>();
-                services.AddTransient<AddEditMemoViewMode>();
-            }).Build();
-
-        /// <summary>
-        /// Gets registered service.
-        /// </summary>
-        /// <typeparam name="T">Type of the service to get.</typeparam>
-        /// <returns>Instance of the service or <see langword="null"/>.</returns>
-        public static T GetService<T>()
-            where T : class
-        {
-            return _host.Services.GetService(typeof(T)) as T;
-        }
-
-        /// <summary>
-        /// Occurs when the application is loading.
-        /// </summary>
-        private void OnStartup(object sender, StartupEventArgs e)
-        {
-            _host.Start();
-        }
-
-        /// <summary>
-        /// Occurs when the application is closing.
-        /// </summary>
-        private async void OnExit(object sender, ExitEventArgs e)
-        {
-            await _host.StopAsync();
-
-            _host.Dispose();
-        }
-
-        /// <summary>
-        /// Occurs when an exception is thrown by an application but not handled.
-        /// </summary>
-        private void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
-        {
-            // For more info see https://docs.microsoft.com/en-us/dotnet/api/system.windows.application.dispatcherunhandledexception?view=windowsdesktop-6.0
-        }
+    /// <summary>
+    /// Срабатывает при ошибке в приложении.
+    /// </summary>
+    private void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+    {
+        Log.Error(e.Exception.Message);
     }
 }

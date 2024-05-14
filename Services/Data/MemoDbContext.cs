@@ -1,6 +1,7 @@
 ﻿using MemoAccount.Services.Data.Dtos;
 using Microsoft.EntityFrameworkCore;
 using System.Configuration;
+using Serilog;
 
 namespace MemoAccount.Services.Data;
 
@@ -13,6 +14,17 @@ public class MemoDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseSqlServer(ConfigurationManager.ConnectionStrings["Database"].ConnectionString);
+        Log.Information("MemoDbContext OnConfiguring");
+        try
+        {            
+            optionsBuilder
+                .UseSqlServer(ConfigurationManager.ConnectionStrings["Database"].ConnectionString)
+                .LogTo(Log.Information);
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex.Message);
+        }
+        Log.Information("MemoDbContext Configured");
     }
 }

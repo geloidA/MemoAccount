@@ -5,6 +5,10 @@ using System.Text;
 
 namespace MemoAccount.Services.Auth;
 
+/// <summary>
+/// Сервис аутентификации. Осуществляет логин и логаут пользователей,
+/// а также проверку их данных на валидность.
+/// </summary>
 public class AuthService(IRepository<User, int> userRepository, AuthenticationStateProvider authenticationStateProvider) : IAuthService
 {
     public void Logout() => authenticationStateProvider.Logout();

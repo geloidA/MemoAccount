@@ -4,6 +4,9 @@ using MemoAccount.Models;
 
 namespace MemoAccount.Services;
 
+/// <summary>
+/// Класс, отвечающий за создание отчета в формате Excel по служебным запискам.
+/// </summary>
 public class ReportService
 {
     private const int DefaultRowHeight = 20;

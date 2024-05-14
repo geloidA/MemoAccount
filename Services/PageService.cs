@@ -3,17 +3,17 @@ using Wpf.Ui;
 namespace MemoAccount.Services
 {
     /// <summary>
-    /// Service that provides pages for navigation.
+    /// Сервис, предоставляющий страницы для навигации.
     /// </summary>
     public class PageService : IPageService
     {
         /// <summary>
-        /// Service which provides the instances of pages.
+        /// Сервис, который предоставляет экземпляры страниц.
         /// </summary>
         private readonly IServiceProvider _serviceProvider;
 
         /// <summary>
-        /// Creates new instance and attaches the <see cref="IServiceProvider"/>.
+        /// Создает новый экземпляр и прикрепляет <see cref="IServiceProvider"/>.
         /// </summary>
         public PageService(IServiceProvider serviceProvider)
         {
@@ -25,7 +25,7 @@ namespace MemoAccount.Services
             where T : class
         {
             if (!typeof(FrameworkElement).IsAssignableFrom(typeof(T)))
-                throw new InvalidOperationException("The page should be a WPF control.");
+                throw new InvalidOperationException("Страница должна быть элементом WPF.");
 
             return (T?)_serviceProvider.GetService(typeof(T));
         }
@@ -34,9 +34,10 @@ namespace MemoAccount.Services
         public FrameworkElement? GetPage(Type pageType)
         {
             if (!typeof(FrameworkElement).IsAssignableFrom(pageType))
-                throw new InvalidOperationException("The page should be a WPF control.");
+                throw new InvalidOperationException("Страница должна быть элементом WPF.");
 
             return _serviceProvider.GetService(pageType) as FrameworkElement;
         }
     }
 }
+

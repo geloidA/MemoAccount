@@ -3,64 +3,107 @@ using Wpf.Ui;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
 
-namespace MemoAccount.Views.Windows
+namespace MemoAccount.Views.Windows;
+
+/// <summary>
+/// Окно приложения.
+/// </summary>
+public partial class MainWindow : INavigationWindow
 {
-    public partial class MainWindow : INavigationWindow
+    /// <summary>
+    /// Модель окна.
+    /// </summary>
+    public MainWindowViewModel ViewModel { get; }
+
+    /// <summary>
+    /// Инициализирует окно.
+    /// </summary>
+    /// <param name="viewModel">Модель окна.</param>
+    /// <param name="pageService">Сервис страниц.</param>
+    /// <param name="navigationService">Сервис навигации.</param>
+    /// <param name="contentDialogService">Сервис модальных диалогов.</param>
+    public MainWindow(
+        MainWindowViewModel viewModel,
+        IPageService pageService,
+        INavigationService navigationService,
+        IContentDialogService contentDialogService
+    )
     {
-        public MainWindowViewModel ViewModel { get; }
+        ViewModel = viewModel;
+        DataContext = this;
 
-        public MainWindow(
-            MainWindowViewModel viewModel,
-            IPageService pageService,
-            INavigationService navigationService,
-            IContentDialogService contentDialogService
-        )
-        {
-            ViewModel = viewModel;
-            DataContext = this;
+        // Подписываемся на изменение темы оформления
+        SystemThemeWatcher.Watch(this);
 
-            SystemThemeWatcher.Watch(this);
+        InitializeComponent();
 
-            InitializeComponent();
-            SetPageService(pageService);
-            contentDialogService.SetDialogHost(RootContentDialog);
+        // Устанавливаем сервис страниц
+        SetPageService(pageService);
 
-            navigationService.SetNavigationControl(RootNavigation);
-        }
+        // Устанавливаем сервис модальных диалогов
+        contentDialogService.SetDialogHost(RootContentDialog);
 
-        #region INavigationWindow methods
+        // Устанавливаем сервис навигации
+        navigationService.SetNavigationControl(RootNavigation);
+    }
 
-        public INavigationView GetNavigation() => RootNavigation;
+    #region INavigationWindow методы
 
-        public bool Navigate(Type pageType) => RootNavigation.Navigate(pageType);
+    /// <summary>
+    /// Возвращает контрол навигации.
+    /// </summary>
+    public INavigationView GetNavigation() => RootNavigation;
 
-        public void SetPageService(IPageService pageService) => RootNavigation.SetPageService(pageService);
+    /// <summary>
+    /// Перейти на страницу.
+    /// </summary>
+    /// <param name="pageType">Тип страницы.</param>
+    /// <returns>Истина, если переход выполнен успешно.</returns>
+    public bool Navigate(Type pageType) => RootNavigation.Navigate(pageType);
 
-        public void ShowWindow() => Show();
+    /// <summary>
+    /// Устанавливает сервис страниц.
+    /// </summary>
+    /// <param name="pageService">Сервис страниц.</param>
+    public void SetPageService(IPageService pageService) => RootNavigation.SetPageService(pageService);
 
-        public void CloseWindow() => Close();
+    /// <summary>
+    /// Показать окно.
+    /// </summary>
+    public void ShowWindow() => Show();
 
-        #endregion INavigationWindow methods
+    /// <summary>
+    /// Закрыть окно.
+    /// </summary>
+    public void CloseWindow() => Close();
 
-        /// <summary>
-        /// Raises the closed event.
-        /// </summary>
-        protected override void OnClosed(EventArgs e)
-        {
-            base.OnClosed(e);
+    #endregion INavigationWindow методы
 
-            // Make sure that closing this window will begin the process of closing the application.
-            Application.Current.Shutdown();
-        }
+    /// <summary>
+    /// Вызывается при закрытии окна.
+    /// </summary>
+    /// <param name="e">Аргументы события.</param>
+    protected override void OnClosed(EventArgs e)
+    {
+        base.OnClosed(e);
 
-        INavigationView INavigationWindow.GetNavigation()
-        {
-            throw new NotImplementedException();
-        }
+        // Закрытие окна приводит к завершению работы приложения
+        Application.Current.Shutdown();
+    }
 
-        public void SetServiceProvider(IServiceProvider serviceProvider)
-        {
-            throw new NotImplementedException();
-        }
+    /// <summary>
+    /// Не реализовано.
+    /// </summary>
+    INavigationView INavigationWindow.GetNavigation()
+    {
+        throw new NotImplementedException();
+    }
+
+    /// <summary>
+    /// Не реализовано.
+    /// </summary>
+    public void SetServiceProvider(IServiceProvider serviceProvider)
+    {
+        throw new NotImplementedException();
     }
 }

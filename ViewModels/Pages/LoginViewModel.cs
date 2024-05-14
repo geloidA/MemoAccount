@@ -7,16 +7,28 @@ using MessageBox = Wpf.Ui.Controls.MessageBox;
 
 namespace MemoAccount.ViewModels.Pages;
 
+/// <summary>
+/// ViewModel для страницы входа
+/// </summary>
 public partial class LoginViewModel(INavigationService navigationService, IAuthService authService) : ObservableValidator
 {
+    /// <summary>
+    /// Логин пользователя
+    /// </summary>
     [ObservableProperty]
-    [Required(ErrorMessage = "Введите логин")] 
+    [Required(ErrorMessage = "Введите логин")]
     private string? _login;
 
+    /// <summary>
+    /// Пароль пользователя
+    /// </summary>
     [ObservableProperty]
     [Required(ErrorMessage = "Введите пароль")]
     private string? _password;
 
+    /// <summary>
+    /// Команда для входа в систему
+    /// </summary>
     [RelayCommand]
     private async Task LoginAsync()
     {
@@ -51,8 +63,15 @@ public partial class LoginViewModel(INavigationService navigationService, IAuthS
         }
     }
 
+    /// <summary>
+    /// Определяет доступность команды входа в систему
+    /// </summary>
+    /// <returns>True, если логин и пароль заполнены</returns>
     private bool CanLogin() => !string.IsNullOrEmpty(Login) && !string.IsNullOrWhiteSpace(Password);
 
+    /// <summary>
+    /// Команда для перехода на страницу регистрации
+    /// </summary>
     [RelayCommand]
     private void OpenRegisterPage()
     {

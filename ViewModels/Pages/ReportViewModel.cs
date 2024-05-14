@@ -13,6 +13,13 @@ using MessageBox = Wpf.Ui.Controls.MessageBox;
 
 namespace MemoAccount.ViewModels.Pages;
 
+/// <summary>
+/// ViewModel для страницы отчета.
+/// Обрабатывает ввод данных пользователя, проверяет их корректность
+/// и отправляет на сервер для получения данных.
+/// Отображает полученные данные в таблице и позволяет с ними работать:
+/// фильтровать, сортировать, экспортировать в Excel.
+/// </summary>
 public partial class ReportViewModel : ObservableValidator
 {
     private readonly IRepository<Memo, int> _memoRepository;

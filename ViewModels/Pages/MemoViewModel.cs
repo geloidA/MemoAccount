@@ -9,6 +9,12 @@ using Wpf.Ui.Extensions;
 
 namespace MemoAccount.ViewModels.Pages;
 
+
+/// <summary>
+/// ViewModel для страницы "Служебные записки", отвечающий за логику работы с памятниками.
+/// Содержит список всех записок, позволяет их создавать, изменять, удалять,
+/// а также поиск и фильтрацию по ним.
+/// </summary>
 public partial class MemoViewModel : ObservableObject
 {
     private readonly IRepository<Division, int> _divisionRepository;

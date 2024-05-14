@@ -3,6 +3,7 @@ using MemoAccount.Models;
 using MemoAccount.Services.Data.Dtos;
 using MemoAccount.Services.Repository;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 namespace MemoAccount.Services.Data.Repositories;
 
@@ -11,6 +12,7 @@ public class DepartmentRepository(IMapper mapper) : DomainRepository<Department,
     public override async IAsyncEnumerable<Department> GetItemsAsync()
     {
         var dbContext = new MemoDbContext();
+        Log.Information("Department GetItemsAsync");
         await foreach (var department in dbContext.Departments
                            .Include(d => d.Divisions)
                            .AsAsyncEnumerable()
@@ -25,6 +27,7 @@ public class DepartmentRepository(IMapper mapper) : DomainRepository<Department,
     public override async Task<ActionResult<Department>> CreateAsync(Department item)
     {
         var dbContext = new MemoDbContext();
+        Log.Information("Department CreateAsync");
         var created = await dbContext.Departments.AddAsync(Mapper.Map<DepartmentDto>(item));
         await dbContext.SaveChangesAsync();
         await dbContext.DisposeAsync();

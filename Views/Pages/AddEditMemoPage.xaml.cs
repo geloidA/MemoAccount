@@ -4,10 +4,14 @@ using Wpf.Ui.Controls;
 namespace MemoAccount.Views.Pages;
 
 /// <summary>
-/// Interaction logic for AddEditMemoPage.xaml
+/// страница создания/редактирования мемуарной книжки
 /// </summary>
 public partial class AddEditMemoPage : INavigableView<AddEditMemoViewMode>
 {
+    /// <summary>
+    /// конструктор
+    /// </summary>
+    /// <param name="viewModel">модель представления</param>
     public AddEditMemoPage(AddEditMemoViewMode viewModel)
     {
         ViewModel = viewModel;
@@ -16,5 +20,8 @@ public partial class AddEditMemoPage : INavigableView<AddEditMemoViewMode>
         InitializeComponent();
     }
 
+    /// <summary>
+    /// модель представления
+    /// </summary>
     public AddEditMemoViewMode ViewModel { get; }
 }

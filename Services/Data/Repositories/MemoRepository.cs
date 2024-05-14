@@ -3,6 +3,7 @@ using MemoAccount.Models;
 using MemoAccount.Services.Data.Dtos;
 using MemoAccount.Services.Repository;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 namespace MemoAccount.Services.Data.Repositories;
 
@@ -11,6 +12,7 @@ public class MemoRepository(IMapper mapper) : DomainRepository<Memo, MemoDto, in
     public override async IAsyncEnumerable<Memo> GetItemsAsync()
     {
         var dbContext = new MemoDbContext();
+        Log.Information("Memo GetItemsAsync");
         await foreach (var memo in dbContext.Memos
                            .Include(m => m.Division)
                            .Include(m => m.Department)
@@ -26,6 +28,7 @@ public class MemoRepository(IMapper mapper) : DomainRepository<Memo, MemoDto, in
     public override async Task<ActionResult<Memo>> CreateAsync(Memo item)
     {
         var dbContext = new MemoDbContext();
+        Log.Information("Memo CreateAsync");
         var sameId = await dbContext.Memos.FindAsync(KeySelector(item));
 
         if (sameId != null) return Error("Служебная записка с указанным номером уже существует.");
@@ -45,6 +48,7 @@ public class MemoRepository(IMapper mapper) : DomainRepository<Memo, MemoDto, in
     {
         var dbContext = new MemoDbContext();
 
+        Log.Information("Memo UpdateAsync");
         var updated = Mapper.Map<MemoDto>(item);
         updated.Department = null!;
         updated.Division = null;

@@ -7,6 +7,12 @@ using MessageBox = Wpf.Ui.Controls.MessageBox;
 
 namespace MemoAccount.ViewModels.Pages;
 
+/// <summary>
+/// ViewModel для страницы регистрации.
+/// Обрабатывает ввод данных пользователя, проверяет их корректность
+/// и отправляет на сервер для регистрации. После регистрации перенаправляет
+/// пользователя на страницу входа.
+/// </summary>
 public partial class RegistrationViewModel(INavigationService navigationService, IAuthService authService) : ObservableValidator
 {
     [ObservableProperty]
