@@ -1,5 +1,10 @@
 # MemoAccount
 
+
+<p align="left">
+  <img src="presentation-images/main-page-dark.png" alt="Скриншот приложения в темном режиме" width="700">
+</p>
+
 Приложение для учета служебных записок в организации.
 
 ### Описание
